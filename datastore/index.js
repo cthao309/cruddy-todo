@@ -77,13 +77,17 @@ exports.readOne = (id, callback) => {
 };
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  // grab the file path by the id
+  let filePath = path.join(exports.dataDir, `${id}.txt`);
+
+  // update the file
+  fs.writeFile(filePath, text, (error) => {
+    if(error) {
+      callback(error);
+    } else {
+      callback(null, { id, text });
+    }
+  });
 };
 
 exports.delete = (id, callback) => {
