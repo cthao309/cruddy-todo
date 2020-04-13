@@ -34,6 +34,8 @@ exports.readAll = (callback) => {
       throw ('No such data file');
     }
 
+    console.log('files => ', files)
+
     // map through the files
     let data = _.map(files, (file) => {
 
@@ -102,7 +104,7 @@ exports.delete = (id, callback) => {
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 
-exports.dataDir = path.join(__dirname, 'data');
+exports.dataDir = path.join(__dirname, 'dataDir');
 
 exports.initialize = () => {
   if (!fs.existsSync(exports.dataDir)) {
