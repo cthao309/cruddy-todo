@@ -12,6 +12,9 @@ const readFilePromise = Promise.promisify(fs.readFile);
 exports.create = (text, callback) => {
   counter.getNextUniqueId((err, id) => {
     // specify the path with the unique id as it name
+
+    console.log('export.dataDir => ', exports.dataDir)
+
     let filePath = path.join(exports.dataDir, `${id}.txt`);
 
     console.log('file path => ', filePath)
@@ -82,14 +85,20 @@ exports.update = (id, text, callback) => {
   // grab the file path by the id
   let filePath = path.join(exports.dataDir, `${id}.txt`);
 
-  // update the file
-  fs.writeFile(filePath, text, (error) => {
+  fs.access(filePath, error => {
     if(error) {
       callback(error);
     } else {
-      callback(null, { id, text });
+      // update the file
+      fs.writeFile(filePath, text, (error) => {
+        if(error) {
+          callback(error);
+        } else {
+          callback(null, { id, text });
+        }
+      });
     }
-  });
+  })
 };
 
 exports.delete = (id, callback) => {
@@ -98,7 +107,11 @@ exports.delete = (id, callback) => {
 
   // remove the file using fs.unlink
   fs.unlink(filePath, (error) => {
-    callback(error)
+    if(error) {
+      callback(error)
+    } else {
+      callback(null);
+    }
   });
 };
 
